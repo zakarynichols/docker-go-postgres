@@ -1,6 +1,3 @@
--- Connect to the database
-\c dbname
-
 -- Create a table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,

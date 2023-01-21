@@ -26,6 +26,7 @@ func main() {
 	mux.Handle("/now", http.HandlerFunc(handleNow(db)))
 	mux.Handle("/user/{username}", http.HandlerFunc(handleUser(db)))
 	mux.Handle("/user", http.HandlerFunc(queryUser(db, 1)))
+	mux.Handle("/users", http.HandlerFunc(queryAllUsers(db)))
 
 	c := cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},
@@ -139,5 +140,37 @@ func queryUser(db *sql.DB, id int) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(u)
+	}
+}
+
+func queryAllUsers(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		rows, err := db.Query("SELECT id, name, email FROM users")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		defer rows.Close()
+
+		var users []struct {
+			ID    int    `json:"id"`
+			Name  string `json:"name"`
+			Email string `json:"email"`
+		}
+		for rows.Next() {
+			var user struct {
+				ID    int    `json:"id"`
+				Name  string `json:"name"`
+				Email string `json:"email"`
+			}
+			if err := rows.Scan(&user.ID, &user.Name, &user.Email); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			users = append(users, user)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(users)
 	}
 }

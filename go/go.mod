@@ -1,4 +1,4 @@
-module go-docker
+module go-postgres-docker
 
 go 1.19
 

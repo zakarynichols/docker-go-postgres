@@ -1,15 +1,14 @@
 version: "3"
 services:
   app:
-    build: .
+    build: go
     ports:
       - "3000:3000"
     depends_on:
       - db
-    links:
-      - db
   db:
     image: postgres
+    build: postgres
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
@@ -17,7 +16,8 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-volumes:
-  pgdata:
+    # networks:
+    #   - postgres-network
+# networks:
+#   postgres-network:
+#     driver: bridge
