@@ -15,6 +15,10 @@ import (
 )
 
 func main() {
+	log.Println(os.Getenv("POSTGRES_PASSWORD"))
+	log.Println(os.Getenv("POSTGRES_USER"))
+	log.Println(os.Getenv("POSTGRES_DB"))
+
 	mux := mux.NewRouter()
 	db, err := openDB()
 	if err != nil {
