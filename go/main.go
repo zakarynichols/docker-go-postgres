@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"go-postgres-docker/db"
 	"log"
 	"net/http"
 	"os"
@@ -15,12 +16,17 @@ import (
 )
 
 func main() {
-	log.Println(os.Getenv("POSTGRES_PASSWORD"))
-	log.Println(os.Getenv("POSTGRES_USER"))
-	log.Println(os.Getenv("POSTGRES_DB"))
+	config := db.Config{
+		Password: os.Getenv("POSTGRES_PASSWORD"),
+		User:     os.Getenv("POSTGRES_USER"),
+		Name:     os.Getenv("POSTGRES_DB"),
+		Host:     os.Getenv("POSTGRES_HOST"),
+		SSLMode:  os.Getenv("POSTGRES_SSLMODE"),
+	}
 
 	mux := mux.NewRouter()
-	db, err := openDB()
+
+	db, err := db.Open(config)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,10 +59,6 @@ func main() {
 	log.Fatal(server.ListenAndServeTLS("cert.pem", "key.pem"))
 }
 
-func openDB() (*sql.DB, error) {
-	return sql.Open("postgres", "user=user password=password dbname=dbname host=db sslmode=disable")
-}
-
 func handleRoot(w http.ResponseWriter, r *http.Request) {
 	responseData := map[string]string{"message": "Hello, World!"}
 	jsonData, err := json.Marshal(responseData)
@@ -77,13 +79,13 @@ func handleNow(db *sql.DB) http.HandlerFunc {
 		var currentTime time.Time
 		err := db.QueryRow("SELECT NOW()").Scan(&currentTime)
 		if err != nil {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		responseData := currentTimeResponse{currentTime.String()}
 		jsonData, err := json.Marshal(responseData)
 		if err != nil {
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
