@@ -2,8 +2,12 @@ package ptp
 
 // ptp -> parent-teacher-portal
 
-import "github.com/zakarynichols/parent-teacher-portal/postgresql"
-
 type SchoolService interface {
-	CreateSchool(school postgresql.School) error
+	CreateSchool(school School) error
+}
+
+type School struct {
+	Name     string `json:"name"`
+	Location string `json:"location"`
+	Type     string `json:"type"`
 }

@@ -2,23 +2,32 @@ package http
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 
 	ptp "github.com/zakarynichols/parent-teacher-portal"
-	"github.com/zakarynichols/parent-teacher-portal/postgresql"
 )
 
 func (s *Server) RegisterSchoolRoutes(ctx context.Context) {
-	s.Router.Handle("/schools/new", handleCreateSchool(ctx, s.SchoolService))
+	s.Router.Handle("/schools/new", handleCreateSchool(ctx, s.SchoolService)).Methods("POST")
 }
 
 func handleCreateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := sc.CreateSchool(postgresql.School{Name: "New school for testing", Location: "1234 cool st.", Type: "public"})
+		var school ptp.School
+
+		if err := json.NewDecoder(r.Body).Decode(&school); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		defer r.Body.Close()
+
+		err := sc.CreateSchool(school)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		w.Header().Set("Content-type", "application/json")
 	}
 }
