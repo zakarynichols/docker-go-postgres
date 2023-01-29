@@ -4,9 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	app "go-postgres-docker"
 	"go-postgres-docker/postgresql"
-	"go-postgres-docker/redisclient"
+	"go-postgres-docker/redisdb"
 	"log"
 	"net/http"
 	"os"
@@ -21,7 +20,7 @@ import (
 // Server extends the stdlib http.Server with the app's required services.
 type Server struct {
 	*http.Server
-	userService app.UserService
+	userService UserService
 }
 
 func main() {
@@ -47,7 +46,7 @@ func main() {
 	userService := postgresql.NewUserService(psql)
 
 	// Redis
-	redis := redisclient.Open()
+	redis := redisdb.Open()
 
 	// Router
 	mux := mux.NewRouter()
@@ -79,7 +78,7 @@ func main() {
 	}
 
 	// Serve TLS
-	log.Println("Starting server on port :" + port)
+	log.Printf("Starting server on port%s\n", server.Addr)
 	log.Fatal(server.ListenAndServeTLS("cert.pem", "key.pem"))
 }
 
@@ -121,7 +120,7 @@ func handleNow(n NowQuerier) http.HandlerFunc {
 }
 
 // pingRedis emits the redis cache is up and running.
-func pingRedis(ctx context.Context, p app.Pinger) http.HandlerFunc {
+func pingRedis(ctx context.Context, p Pinger) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		status, err := p.Ping(ctx)
 		if err != nil {
@@ -134,4 +133,12 @@ func pingRedis(ctx context.Context, p app.Pinger) http.HandlerFunc {
 		}
 		json.NewEncoder(w).Encode(response)
 	}
+}
+
+type Pinger interface {
+	Ping(context.Context) (string, error)
+}
+
+type UserService interface {
+	QueryUsers() ([]postgresql.User, error)
 }
