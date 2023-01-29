@@ -38,8 +38,6 @@ func main() {
 	}
 	defer psql.Close()
 
-	// User service
-	userService := postgresql.NewUserService(psql)
 	schoolService := postgresql.NewSchoolService(psql)
 
 	// Redis
@@ -72,7 +70,6 @@ func main() {
 			Handler: c.Handler(router),
 		},
 		Router:        router,
-		UserService:   userService,
 		SchoolService: schoolService,
 	}
 
