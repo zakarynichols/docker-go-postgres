@@ -1,0 +1,52 @@
+openapi: 3.0.0
+info:
+  title: Parent Teacher Portal
+  description: A description about the application.
+  version: 0.0.1
+
+servers:
+  - url: https://parent-teacher-portal
+    description: Example app for demonstration.
+
+paths:
+  /schools:
+    post:
+      tags:
+        - schools
+      summary: Create new school
+      description: Creates a new school. Only a single school will be used?.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Schools"
+      responses:
+        "200":
+          description: Just a status code indicating success.
+components:
+  schemas:
+    Schools:
+      required:
+        - name
+        - photoUrls
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 99
+        name:
+          type: string
+          description: name of the school
+          example: University of XYZ
+        location:
+          type: string
+          description: location of the school
+          example: 162 Andover Street Sulphur, LA 70663
+        type:
+          type: string
+          description: type of school (public or private)
+          enum:
+            - public
+            - private
+          example: private

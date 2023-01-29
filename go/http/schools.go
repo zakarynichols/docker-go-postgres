@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Server) RegisterSchoolRoutes(ctx context.Context) {
-	s.Router.Handle("/schools/new", handleCreateSchool(ctx, s.SchoolService)).Methods("POST")
+	s.Router.Handle("/schools", handleCreateSchool(ctx, s.SchoolService)).Methods("POST")
 }
 
 func handleCreateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc {
