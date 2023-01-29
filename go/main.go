@@ -20,7 +20,13 @@ import (
 // Server extends the stdlib http.Server with the app's required services.
 type Server struct {
 	*http.Server
-	userService UserService
+	*mux.Router
+	UserService
+	SchoolService
+}
+
+func (s *Server) registerSchoolRoutes(ctx context.Context) {
+	s.Router.Handle("/schools/new", http.HandlerFunc(handleCreateSchool(ctx, s.SchoolService)))
 }
 
 func main() {
@@ -54,7 +60,6 @@ func main() {
 	mux.Handle("/", http.HandlerFunc(handleRoot))
 	mux.Handle("/now", http.HandlerFunc(handleNow(psql)))
 	mux.Handle("/cache", http.HandlerFunc(pingRedis(ctx, redis)))
-	mux.Handle("/create-school", http.HandlerFunc(handleCreateSchool(ctx, schoolService)))
 
 	// Cors
 	c := cors.New(cors.Options{
@@ -76,8 +81,12 @@ func main() {
 			Addr:    ":" + port,
 			Handler: c.Handler(mux),
 		},
-		userService: userService,
+		Router:        mux,
+		UserService:   userService,
+		SchoolService: schoolService,
 	}
+
+	server.registerSchoolRoutes(ctx)
 
 	// Serve TLS
 	log.Printf("Starting server on port%s\n", server.Addr)
@@ -143,6 +152,10 @@ type Pinger interface {
 
 type UserService interface {
 	QueryUsers() ([]postgresql.User, error)
+}
+
+type SchoolService interface {
+	CreateSchool(postgresql.School) error
 }
 
 type SchoolCreator interface {
