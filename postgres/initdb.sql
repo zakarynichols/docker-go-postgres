@@ -82,62 +82,62 @@ CREATE TABLE attendance (
     FOREIGN KEY (course_id) REFERENCES courses(course_id)
 );
 
-INSERT INTO schools (school_id, name, location, type) VALUES
-    (1, 'University of XYZ', 'City A', 'public'),
-    (2, 'College of ABC', 'City B', 'private');
+INSERT INTO schools (name, location, type) VALUES
+    ('University of XYZ', 'City A', 'public'),
+    ('College of ABC', 'City B', 'private');
 
-INSERT INTO faculty_members (faculty_member_id, first_name, last_name, email, role, school_id) VALUES
-    (1, 'John', 'Doe', 'johndoe@email.com', 'instructor', 1),
-    (2, 'Jane', 'Smith', 'janesmith@email.com', 'instructor', 1),
-    (3, 'Bob', 'Johnson', 'bobjohnson@email.com', 'instructor', 2);
+INSERT INTO faculty_members (first_name, last_name, email, role, school_id) VALUES
+    ('John', 'Doe', 'johndoe@email.com', 'instructor', 1),
+    ('Jane', 'Smith', 'janesmith@email.com', 'instructor', 1),
+    ('Bob', 'Johnson', 'bobjohnson@email.com', 'instructor', 2);
 
-INSERT INTO courses (course_id, name, school_id, faculty_member_id, credits) VALUES
-    (1, 'Introduction to Computer Science', 1, 1, 3),
-    (2, 'Calculus', 1, 2, 4),
-    (3, 'Physics', 2, 3, 5);
+INSERT INTO courses (name, school_id, faculty_member_id, credits) VALUES
+    ('Introduction to Computer Science', 1, 1, 3),
+    ('Calculus', 1, 2, 4),
+    ('Physics', 2, 3, 5);
 
-INSERT INTO students (student_id, first_name, last_name, email, school_id) VALUES 
-    (1, 'John', 'Doe', 'johndoe@email.com', 1),
-    (2, 'Jane', 'Smith', 'janesmith@email.com', 1),
-    (3, 'Bob', 'Johnson', 'bobjohnson@email.com', 2);
+INSERT INTO students (first_name, last_name, email, school_id) VALUES 
+    ('John', 'Doe', 'johndoe@email.com', 1),
+    ('Jane', 'Smith', 'janesmith@email.com', 1),
+    ('Bob', 'Johnson', 'bobjohnson@email.com', 2);
 
-INSERT INTO course_grades (grade_id, student_id, course_id, grade) VALUES
-    (1, 1, 1, 90),
-    (2, 1, 2, 85),
-    (3, 2, 1, 95),
-    (4, 3, 3, 80);
+INSERT INTO course_grades (student_id, course_id, grade) VALUES
+    (1, 1, 90),
+    (1, 2, 85),
+    (2, 1, 95),
+    (3, 3, 80);
 
-INSERT INTO assignments (assignment_id, course_id, name, due_date) VALUES
-    (1, 1, 'Introduction to Programming', '2022-02-28'),
-    (2, 1, 'Data Structures', '2022-03-15'),
-    (3, 2, 'Calculus I', '2022-03-12'),
-    (4, 2, 'Calculus II', '2022-04-02'),
-    (5, 3, 'Introduction to Database Systems', '2022-04-20'),
-    (6, 3, 'SQL Queries', '2022-05-04');
+INSERT INTO assignments (course_id, name, due_date) VALUES
+    (1, 'Introduction to Programming', '2022-02-28'),
+    (1, 'Data Structures', '2022-03-15'),
+    (2, 'Calculus I', '2022-03-12'),
+    (2, 'Calculus II', '2022-04-02'),
+    (3, 'Introduction to Database Systems', '2022-04-20'),
+    (3, 'SQL Queries', '2022-05-04');
 
-INSERT INTO submissions (submission_id, student_id, assignment_id, submission_date) VALUES
-    (1, 1, 1, '2022-02-28'),
-    (2, 2, 1, '2022-03-01'),
-    (3, 3, 2, '2022-03-11'),
-    (4, 3, 1, '2022-03-13'),
-    (5, 2, 3, '2022-04-01'),
-    (6, 1, 4, '2022-04-03'),
-    (7, 3, 5, '2022-04-19'),
-    (8, 2, 6, '2022-05-03');
+INSERT INTO submissions (student_id, assignment_id, submission_date) VALUES
+    (1, 1, '2022-02-28'),
+    (2, 1, '2022-03-01'),
+    (3, 2, '2022-03-11'),
+    (3, 1, '2022-03-13'),
+    (2, 3, '2022-04-01'),
+    (1, 4, '2022-04-03'),
+    (3, 5, '2022-04-19'),
+    (2, 6, '2022-05-03');
 
-INSERT INTO attendance (attendance_id, student_id, course_id, date, present) VALUES
-    (1, 1, 1, '12-21-2022', true),
-    (2, 2, 2, '12-21-2022', false),
-    (3, 3, 1, '12-21-2022', false),
-    (4, 3, 1, '12-21-2022', false),
-    (5, 3, 1, '12-21-2022', false),
-    (6, 3, 1, '12-21-2022', true);
+INSERT INTO attendance (student_id, course_id, date, present) VALUES
+    (1, 1, '12-21-2022', true),
+    (2, 2, '12-21-2022', false),
+    (3, 1, '12-21-2022', false),
+    (3, 1, '12-21-2022', false),
+    (3, 1, '12-21-2022', false),
+    (3, 1, '12-21-2022', true);
 
-INSERT INTO submission_grades (grade_id, submission_id, faculty_member_id, grade) VALUES
-    (1, 1, 1, 88.0),
-    (2, 2, 1, 85.0),
-    (3, 3, 2, 92.5),
-    (4, 4, 2, 90.0);
+INSERT INTO submission_grades (submission_id, faculty_member_id, grade) VALUES
+    (1, 1, 88.0),
+    (2, 1, 85.0),
+    (3, 2, 92.5),
+    (4, 2, 90.0);
 
 SELECT * FROM schools;
 SELECT * FROM courses;

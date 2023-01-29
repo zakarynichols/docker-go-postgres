@@ -44,6 +44,7 @@ func main() {
 
 	// User service
 	userService := postgresql.NewUserService(psql)
+	schoolService := postgresql.NewSchoolService(psql)
 
 	// Redis
 	redis := redisdb.Open()
@@ -53,6 +54,7 @@ func main() {
 	mux.Handle("/", http.HandlerFunc(handleRoot))
 	mux.Handle("/now", http.HandlerFunc(handleNow(psql)))
 	mux.Handle("/cache", http.HandlerFunc(pingRedis(ctx, redis)))
+	mux.Handle("/create-school", http.HandlerFunc(handleCreateSchool(ctx, schoolService)))
 
 	// Cors
 	c := cors.New(cors.Options{
@@ -141,4 +143,19 @@ type Pinger interface {
 
 type UserService interface {
 	QueryUsers() ([]postgresql.User, error)
+}
+
+type SchoolCreator interface {
+	CreateSchool(postgresql.School) error
+}
+
+func handleCreateSchool(ctx context.Context, sc SchoolCreator) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := sc.CreateSchool(postgresql.School{Name: "New school for testing", Location: "1234 cool st.", Type: "public"})
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-type", "application/json")
+	}
 }
