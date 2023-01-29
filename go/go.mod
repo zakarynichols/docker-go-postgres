@@ -1,4 +1,4 @@
-module go-postgres-docker
+module github.com/zakarynichols/parent-teacher-portal
 
 go 1.19
 

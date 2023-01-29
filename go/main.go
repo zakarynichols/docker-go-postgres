@@ -4,30 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"go-postgres-docker/postgresql"
-	"go-postgres-docker/redisdb"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	httpx "github.com/zakarynichols/parent-teacher-portal/http"
+	"github.com/zakarynichols/parent-teacher-portal/postgresql"
+	"github.com/zakarynichols/parent-teacher-portal/redisdb"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 
 	_ "github.com/lib/pq"
 )
-
-// Server extends the stdlib http.Server with the app's required services.
-type Server struct {
-	*http.Server
-	*mux.Router
-	UserService
-	SchoolService
-}
-
-func (s *Server) registerSchoolRoutes(ctx context.Context) {
-	s.Router.Handle("/schools/new", http.HandlerFunc(handleCreateSchool(ctx, s.SchoolService)))
-}
 
 func main() {
 	ctx := context.Background()
@@ -56,10 +46,10 @@ func main() {
 	redis := redisdb.Open()
 
 	// Router
-	mux := mux.NewRouter()
-	mux.Handle("/", http.HandlerFunc(handleRoot))
-	mux.Handle("/now", http.HandlerFunc(handleNow(psql)))
-	mux.Handle("/cache", http.HandlerFunc(pingRedis(ctx, redis)))
+	router := mux.NewRouter()
+	router.HandleFunc("/", handleRoot)
+	router.HandleFunc("/now", handleNow(psql))
+	router.HandleFunc("/cache", pingRedis(ctx, redis))
 
 	// Cors
 	c := cors.New(cors.Options{
@@ -76,17 +66,17 @@ func main() {
 	}
 
 	// Init the server struct
-	server := Server{
+	server := httpx.Server{
 		Server: &http.Server{
 			Addr:    ":" + port,
-			Handler: c.Handler(mux),
+			Handler: c.Handler(router),
 		},
-		Router:        mux,
+		Router:        router,
 		UserService:   userService,
 		SchoolService: schoolService,
 	}
 
-	server.registerSchoolRoutes(ctx)
+	server.RegisterSchoolRoutes(ctx)
 
 	// Serve TLS
 	log.Printf("Starting server on port%s\n", server.Addr)
@@ -148,27 +138,4 @@ func pingRedis(ctx context.Context, p Pinger) http.HandlerFunc {
 
 type Pinger interface {
 	Ping(context.Context) (string, error)
-}
-
-type UserService interface {
-	QueryUsers() ([]postgresql.User, error)
-}
-
-type SchoolService interface {
-	CreateSchool(postgresql.School) error
-}
-
-type SchoolCreator interface {
-	CreateSchool(postgresql.School) error
-}
-
-func handleCreateSchool(ctx context.Context, sc SchoolCreator) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		err := sc.CreateSchool(postgresql.School{Name: "New school for testing", Location: "1234 cool st.", Type: "public"})
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		w.Header().Set("Content-type", "application/json")
-	}
 }
