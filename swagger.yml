@@ -5,8 +5,8 @@ info:
   version: 0.0.1
 
 servers:
-  - url: https://parent-teacher-portal
-    description: Example app for demonstration.
+  - url: https://localhost:3000
+    description: Example app for demonstration locally.
 
 paths:
   /schools:
