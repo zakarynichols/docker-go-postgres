@@ -20,7 +20,14 @@ type psqlService struct {
 
 // Open opens a postgres database and returns a service to interact with it.
 func Open(config Config) (*psqlService, error) {
-	connStr := fmt.Sprintf("user=%s password=%s dbname=%s host=%s sslmode=%s", config.User, config.Password, config.Name, config.Host, config.SSLMode)
+	connStr := fmt.Sprintf(
+		"user=%s password=%s dbname=%s host=%s sslmode=%s",
+		config.User,
+		config.Password,
+		config.Name,
+		config.Host,
+		config.SSLMode,
+	)
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
