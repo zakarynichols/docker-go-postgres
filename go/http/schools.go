@@ -17,7 +17,7 @@ func (s *Server) RegisterSchoolRoutes(ctx context.Context) {
 	s.mux.Handle("/schools/{id}", handleDeleteSchool(ctx, s.schoolService), "DELETE")
 }
 
-func handleCreateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc {
+func handleCreateSchool(ctx context.Context, ss ptp.SchoolService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var school ptp.School
 
@@ -27,7 +27,7 @@ func handleCreateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerF
 		}
 		defer r.Body.Close()
 
-		err := sc.CreateSchool(school)
+		err := ss.CreateSchool(school)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -37,7 +37,7 @@ func handleCreateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerF
 	}
 }
 
-func handleGetSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc {
+func handleGetSchool(ctx context.Context, ss ptp.SchoolService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, ok := vars["id"]
@@ -46,7 +46,7 @@ func handleGetSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc
 			return
 		}
 
-		school, err := sc.GetSchool(id)
+		school, err := ss.GetSchool(id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -57,9 +57,9 @@ func handleGetSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc
 	}
 }
 
-func handleGetAllSchools(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc {
+func handleGetAllSchools(ctx context.Context, ss ptp.SchoolService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		schools, err := sc.GetAllSchools()
+		schools, err := ss.GetAllSchools()
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -70,7 +70,7 @@ func handleGetAllSchools(ctx context.Context, sc ptp.SchoolService) http.Handler
 	}
 }
 
-func handleUpdateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc {
+func handleUpdateSchool(ctx context.Context, ss ptp.SchoolService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, ok := vars["id"]
@@ -86,7 +86,7 @@ func handleUpdateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerF
 		}
 		defer r.Body.Close()
 
-		err := sc.UpdateSchool(id, school)
+		err := ss.UpdateSchool(id, school)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -97,7 +97,7 @@ func handleUpdateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerF
 	}
 }
 
-func handleDeleteSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc {
+func handleDeleteSchool(ctx context.Context, ss ptp.SchoolService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		id, ok := vars["id"]
@@ -106,7 +106,7 @@ func handleDeleteSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerF
 			return
 		}
 
-		err := sc.DeleteSchool(id)
+		err := ss.DeleteSchool(id)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

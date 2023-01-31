@@ -14,10 +14,9 @@ import (
 )
 
 func main() {
-	ctx := context.Background()
-
+	ctx := context.TODO()
 	// Postgres
-	config := postgres.Config{
+	pgConfig := postgres.Config{
 		Password: os.Getenv("POSTGRES_PASSWORD"),
 		User:     os.Getenv("POSTGRES_USER"),
 		Name:     os.Getenv("POSTGRES_DB"),
@@ -26,7 +25,7 @@ func main() {
 	}
 
 	// Open psql
-	psql, err := postgres.Open(config)
+	psql, err := postgres.Open(pgConfig)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -44,19 +43,22 @@ func main() {
 
 	port := "3000"
 
-	server := http.New(
-		port,
-		schoolService,
-	)
+	httpConfig := http.Config{
+		Addr:          port,
+		SchoolService: schoolService,
+	}
+
+	server := http.New(httpConfig)
 
 	server.RegisterSchoolRoutes(ctx)
 
-	if os.Getenv("APP_ENV") == "development" {
+	env := os.Getenv("APP_ENV")
+
+	if env == "development" {
 		log.Fatal(server.Listen())
-	} else if os.Getenv("APP_ENV") == "production" {
+	} else if env == "production" {
 		log.Fatal(server.ListenTLS())
 	} else {
-		fmt.Printf("ptp: malformed APP_ENV\n")
-		os.Exit(1)
+		log.Fatal("ptp: malformed APP_ENV\n")
 	}
 }
