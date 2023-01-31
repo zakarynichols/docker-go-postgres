@@ -28,6 +28,10 @@ func New(addr string, ss ptp.SchoolService) *Server {
 	}
 }
 
-func (s *Server) ListenTLS() error {
+func (s Server) ListenTLS() error {
 	return s.server.ListenAndServeTLS("cert.pem", "key.pem")
+}
+
+func (s Server) Listen() error {
+	return s.server.ListenAndServe()
 }

@@ -24,7 +24,7 @@ func (ss schoolService) CreateSchool(school ptp.School) error {
 
 func (ss schoolService) GetSchool(id string) (ptp.School, error) {
 	var school ptp.School
-	err := ss.psql.db.QueryRow("SELECT * FROM schools WHERE id = $1", id).Scan(&school.ID, &school.Name, &school.Location, &school.Type)
+	err := ss.psql.db.QueryRow("SELECT * FROM schools WHERE school_id = $1", id).Scan(&school.ID, &school.Name, &school.Location, &school.Type)
 	if err != nil {
 		return school, fmt.Errorf("failed to retrieve school: %s", err.Error())
 	}
@@ -50,7 +50,7 @@ func (ss schoolService) GetAllSchools() ([]ptp.School, error) {
 }
 
 func (ss schoolService) UpdateSchool(id string, school ptp.School) error {
-	_, err := ss.psql.db.Exec("UPDATE schools SET name = $1, location = $2, type = $3 WHERE id = $4", school.Name, school.Location, school.Type, id)
+	_, err := ss.psql.db.Exec("UPDATE schools SET name = $1, location = $2, type = $3 WHERE school_id = $4", school.Name, school.Location, school.Type, id)
 	if err != nil {
 		return fmt.Errorf("failed to update school: %s", err.Error())
 	}
@@ -58,7 +58,7 @@ func (ss schoolService) UpdateSchool(id string, school ptp.School) error {
 }
 
 func (ss schoolService) DeleteSchool(id string) error {
-	_, err := ss.psql.db.Exec("DELETE FROM schools WHERE id = $1", id)
+	_, err := ss.psql.db.Exec("DELETE FROM schools WHERE school_id = $1", id)
 	if err != nil {
 		return fmt.Errorf("failed to delete school: %s", err.Error())
 	}

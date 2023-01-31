@@ -51,5 +51,12 @@ func main() {
 
 	server.RegisterSchoolRoutes(ctx)
 
-	log.Fatal(server.ListenTLS())
+	if os.Getenv("APP_ENV") == "development" {
+		log.Fatal(server.Listen())
+	} else if os.Getenv("APP_ENV") == "production" {
+		log.Fatal(server.ListenTLS())
+	} else {
+		fmt.Printf("ptp: malformed APP_ENV\n")
+		os.Exit(1)
+	}
 }
