@@ -5,16 +5,16 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	ptp "github.com/zakarynichols/parent-teacher-portal"
+	"github.com/zakarynichols/parent-teacher-portal/mux"
 )
 
 func (s *Server) RegisterSchoolRoutes(ctx context.Context) {
-	s.router.Handle("/schools", handleCreateSchool(ctx, s.schoolService)).Methods("POST")
-	s.router.Handle("/schools/{id}", handleGetSchool(ctx, s.schoolService)).Methods("GET")
-	s.router.Handle("/schools", handleGetAllSchools(ctx, s.schoolService)).Methods("GET")
-	s.router.Handle("/schools/{id}", handleUpdateSchool(ctx, s.schoolService)).Methods("PUT")
-	s.router.Handle("/schools/{id}", handleDeleteSchool(ctx, s.schoolService)).Methods("DELETE")
+	s.mux.Router.Handle("/schools", handleCreateSchool(ctx, s.schoolService)).Methods("POST")
+	s.mux.Router.Handle("/schools/{id}", handleGetSchool(ctx, s.schoolService)).Methods("GET")
+	s.mux.Router.Handle("/schools", handleGetAllSchools(ctx, s.schoolService)).Methods("GET")
+	s.mux.Router.Handle("/schools/{id}", handleUpdateSchool(ctx, s.schoolService)).Methods("PUT")
+	s.mux.Router.Handle("/schools/{id}", handleDeleteSchool(ctx, s.schoolService)).Methods("DELETE")
 }
 
 func handleCreateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc {

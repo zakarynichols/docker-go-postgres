@@ -3,28 +3,27 @@ package http
 import (
 	"net/http"
 
-	"github.com/gorilla/mux"
 	ptp "github.com/zakarynichols/parent-teacher-portal"
 	"github.com/zakarynichols/parent-teacher-portal/cors"
+	"github.com/zakarynichols/parent-teacher-portal/mux"
 )
 
-// Server extends the stdlib http.Server with the app's required services.
 type Server struct {
 	server        *http.Server
-	router        *mux.Router
+	mux           *mux.Mux
 	schoolService ptp.SchoolService
 }
 
 func New(addr string, ss ptp.SchoolService) *Server {
-	r := mux.NewRouter()
+	m := mux.New()
 	c := cors.New()
 
 	return &Server{
 		server: &http.Server{
 			Addr:    ":" + addr,
-			Handler: c.Handler(r),
+			Handler: c.Handler(m.Router),
 		},
-		router:        r,
+		mux:           m,
 		schoolService: ss,
 	}
 }
