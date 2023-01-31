@@ -10,11 +10,11 @@ import (
 )
 
 func (s *Server) RegisterSchoolRoutes(ctx context.Context) {
-	s.mux.Router.Handle("/schools", handleCreateSchool(ctx, s.schoolService)).Methods("POST")
-	s.mux.Router.Handle("/schools/{id}", handleGetSchool(ctx, s.schoolService)).Methods("GET")
-	s.mux.Router.Handle("/schools", handleGetAllSchools(ctx, s.schoolService)).Methods("GET")
-	s.mux.Router.Handle("/schools/{id}", handleUpdateSchool(ctx, s.schoolService)).Methods("PUT")
-	s.mux.Router.Handle("/schools/{id}", handleDeleteSchool(ctx, s.schoolService)).Methods("DELETE")
+	s.mux.Handle("/schools", handleCreateSchool(ctx, s.schoolService), "POST")
+	s.mux.Handle("/schools/{id}", handleGetSchool(ctx, s.schoolService), "GET")
+	s.mux.Handle("/schools", handleGetAllSchools(ctx, s.schoolService), "GET")
+	s.mux.Handle("/schools/{id}", handleUpdateSchool(ctx, s.schoolService), "PUT")
+	s.mux.Handle("/schools/{id}", handleDeleteSchool(ctx, s.schoolService), "DELETE")
 }
 
 func handleCreateSchool(ctx context.Context, sc ptp.SchoolService) http.HandlerFunc {

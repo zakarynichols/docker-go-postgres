@@ -21,7 +21,7 @@ func New(addr string, ss ptp.SchoolService) *Server {
 	return &Server{
 		server: &http.Server{
 			Addr:    ":" + addr,
-			Handler: c.Handler(m.Router),
+			Handler: c.Handler(m),
 		},
 		mux:           m,
 		schoolService: ss,
