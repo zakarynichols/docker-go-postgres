@@ -1,3 +1,7 @@
+# How to validate Open API with Github Actions CI
+# https://swagger.io/blog/api-design/validate-openapi-definitions-swagger-editor/
+# https://github.com/char0n/swagger-editor-validate
+
 on: [push]
 
 jobs:
