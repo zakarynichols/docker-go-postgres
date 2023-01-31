@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/zakarynichols/parent-teacher-portal/http"
-	"github.com/zakarynichols/parent-teacher-portal/postgresql"
-	"github.com/zakarynichols/parent-teacher-portal/redisdb"
+	"github.com/zakarynichols/parent-teacher-portal/postgres"
+	"github.com/zakarynichols/parent-teacher-portal/redis"
 
 	_ "github.com/lib/pq"
 )
@@ -17,7 +17,7 @@ func main() {
 	ctx := context.Background()
 
 	// Postgres
-	config := postgresql.Config{
+	config := postgres.Config{
 		Password: os.Getenv("POSTGRES_PASSWORD"),
 		User:     os.Getenv("POSTGRES_USER"),
 		Name:     os.Getenv("POSTGRES_DB"),
@@ -26,16 +26,16 @@ func main() {
 	}
 
 	// Open psql
-	psql, err := postgresql.Open(config)
+	psql, err := postgres.Open(config)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer psql.Close()
 
-	schoolService := postgresql.NewSchoolService(psql)
+	schoolService := postgres.NewSchoolService(psql)
 
 	// Redis
-	redis := redisdb.Open()
+	redis := redis.Open()
 	pong, err := redis.Ping(ctx)
 	if err != nil {
 		log.Fatal(err)
