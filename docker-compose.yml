@@ -4,28 +4,36 @@ services:
     build: go
     env_file: ".env"
     ports:
-      - "3000:3000"
+      - "1111:3000"
     depends_on:
       - postgres
-    networks:
-      - app-network
   postgres:
     build: postgres
     env_file: ".env"
     restart: always
     ports:
-      - "5432:5432"
-    networks:
-      - app-network
+      - "2222:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
   redis:
     image: redis:latest
     ports:
-      - "6379:6379"
-    networks:
-      - app-network
-networks:
-  app-network:
+      - "3333:6379"
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "4444:8080"
+    volumes:
+      - ./swagger.yaml:/usr/share/nginx/html/swagger.yaml
+    environment:
+      URL: swagger.yaml
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    volumes:
+      - ./swagger.yaml:/tmp/swagger.yaml
+    environment:
+      SWAGGER_FILE: /tmp/swagger.yaml
+    ports:
+      - "5555:8080"
 volumes:
   postgres-data:

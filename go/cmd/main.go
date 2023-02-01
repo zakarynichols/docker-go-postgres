@@ -59,6 +59,6 @@ func main() {
 	} else if env == "production" {
 		log.Fatal(server.ListenTLS())
 	} else {
-		log.Fatal("ptp: malformed APP_ENV\n")
+		log.Fatal("ptp: malformed APP_ENV")
 	}
 }
