@@ -1,3 +1,7 @@
+# Feature Overview
+
+This is a high-level list of the possible features. It is highly subject to change.
+
 - An HTTP server: This handles incoming HTTP requests and sends responses to the client.
 
 - A router: This maps incoming requests to the appropriate handlers based on the URL and HTTP method.

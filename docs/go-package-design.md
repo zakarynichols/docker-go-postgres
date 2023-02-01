@@ -1,6 +1,6 @@
-# High-level Package Design
+# High-level Go Package Design
 
-Most standard library or third-party packages are wrapped around an abstraction. e.g. `net/http` is not exposed to consumers, but a `github.com/username/repo/http` package instead. Inside the wrapper package is a struct with private fields and then public methods to interact with.
+Most standard library or third-party packages are wrapped around an abstraction. e.g. `net/http` is not exposed to consumers, but a `github.com/username/repo/http` package instead. Inside the wrapper package is a struct with private fields and then public methods to interact with. The idea being to only expose the necessary functionality for the app to work, not expose the entire third-party package.
 
 The goal is to hopefully provide benefits in:
 
