@@ -1,8 +1,8 @@
 # Go - Compile and execute go server
 FROM golang:latest
-WORKDIR /app
+WORKDIR /server
 COPY . .
 RUN go mod download
 RUN go build -o main cmd/main.go
 EXPOSE 3000
-ENTRYPOINT ["/app/main"]
+ENTRYPOINT ["/server/main"]

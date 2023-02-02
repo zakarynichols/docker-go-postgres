@@ -5,7 +5,7 @@ info:
   version: 0.0.1
 
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:1111
     description: Example app for demonstration locally.
 
 paths:
@@ -25,6 +25,14 @@ paths:
       responses:
         "200":
           description: Status code indicating success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Schools"
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: School not found
     put:
       tags:
         - schools
@@ -41,6 +49,10 @@ paths:
       responses:
         "200":
           description: Status code indicating success
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: School not found
   /schools/{schoolId}:
     get:
       tags:
@@ -65,6 +77,26 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/Schools"
+        "400":
+          description: Invalid ID supplied
+        "404":
+          description: School not found
+    delete:
+      tags:
+        - schools
+      summary: Delete a school
+      operationId: deleteSchoolById
+      parameters:
+        - name: schoolId
+          in: path
+          description: ID of school to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: Successful operation
         "400":
           description: Invalid ID supplied
         "404":

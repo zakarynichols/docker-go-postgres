@@ -35,5 +35,9 @@ services:
       SWAGGER_FILE: /tmp/swagger.yaml
     ports:
       - "5555:8080"
+  node:
+    build: node
+    ports:
+      - "7777:7777"
 volumes:
   postgres-data:
