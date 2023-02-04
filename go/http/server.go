@@ -33,9 +33,8 @@ func New(config Config) *Server {
 	}
 }
 
-func (s Server) ListenTLS() error {
-	// Hard-coded cert and key for now.
-	return s.server.ListenAndServeTLS("cert.pem", "key.pem")
+func (s Server) ListenTLS(cert, key string) error {
+	return s.server.ListenAndServeTLS(cert, key)
 }
 
 func (s Server) Listen() error {

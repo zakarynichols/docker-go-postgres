@@ -57,7 +57,7 @@ func main() {
 	if env == "development" {
 		log.Fatal(server.Listen())
 	} else if env == "production" {
-		log.Fatal(server.ListenTLS())
+		log.Fatal(server.ListenTLS("cert.pem", "key.pem")) // Remove hard-coded values.
 	} else {
 		log.Fatal("ptp: malformed APP_ENV")
 	}

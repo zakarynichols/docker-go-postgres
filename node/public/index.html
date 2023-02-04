@@ -4,9 +4,10 @@
     <title>HTTP Requests Example</title>
   </head>
   <body>
+    <div id="error"></div>
     <form id="school-form">
       <div class="form-group">
-        <label for="schoolId">School ID:</label>
+        <label for="schoolId">School ID</label>
         <input type="text" id="schoolId" name="schoolId" required />
       </div>
       <button type="submit">Get School</button>
@@ -36,6 +37,7 @@
       const schoolNameEl = document.querySelector("#school-name");
       const schoolLocation = document.querySelector("#school-location");
       const schoolTypeEl = document.querySelector("#school-type");
+      const errorEl = document.querySelector("#error");
 
       schoolFormEl.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -48,10 +50,11 @@
           schoolTypeEl.textContent = school.type;
         } catch (error) {
           console.error(error);
+          errorEl.textContent = "failed";
         }
       });
 
-      const baseURL = "http://localhost:1111";
+      const baseURL = "http://go:3000"; // On the host machine is http://localhost:1111
 
       async function getSchoolById(schoolId) {
         const response = await fetch(`${baseURL}/schools/${schoolId}`, {
