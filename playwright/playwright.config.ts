@@ -1,6 +1,6 @@
 import type { PlaywrightTestConfig } from "@playwright/test";
 
-const E2E_HOST = process.env.E2E_HOST ?? "localhost";
+const E2E_HOST = process.env.NODE_CLIENT_HOST;
 
 /**
  * Read environment variables from file.

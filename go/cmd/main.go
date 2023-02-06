@@ -41,7 +41,7 @@ func main() {
 	}
 	fmt.Println(pong)
 
-	port := "3000"
+	port := os.Getenv("GO_PORT")
 
 	httpConfig := http.Config{
 		Addr:          port,
@@ -52,13 +52,13 @@ func main() {
 
 	server.RegisterSchoolRoutes(ctx)
 
-	env := os.Getenv("APP_ENV")
+	env := os.Getenv("GO_ENV")
 
 	if env == "development" {
 		log.Fatal(server.Listen())
 	} else if env == "production" {
 		log.Fatal(server.ListenTLS("cert.pem", "key.pem")) // Remove hard-coded values.
 	} else {
-		log.Fatal("ptp: malformed APP_ENV")
+		log.Fatal("ptp: malformed GO_ENV")
 	}
 }

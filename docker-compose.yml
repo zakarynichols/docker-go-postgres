@@ -37,15 +37,11 @@ services:
       - "5555:8080"
   node:
     build: node
+    env_file: ".env"
     ports:
       - "7777:7777"
     depends_on:
       - go
-    # volumes:
-    # These mappings allow for re-compiling using nodemon.
-    # Need to figure out how docker does it under the hood.
-    # - "./node:/client"
-    # - "/client/node_modules"
   playwright:
     build: playwright
     env_file: ".env"

@@ -1,3 +1,12 @@
+const server = {
+  host: process.env.GO_HOST,
+  port: process.env.GO_PORT,
+};
+
+// serverURL is the URL of the Go HTTP server.
+const serverURL = `http://${server.host}:${server.port}`; // On the host machine is http://localhost:1111
+
+export const indexHTML = `
 <!DOCTYPE html>
 <html>
   <head>
@@ -54,10 +63,8 @@
         }
       });
 
-      const baseURL = "http://go:3000"; // On the host machine is http://localhost:1111
-
       async function getSchoolById(schoolId) {
-        const response = await fetch(`${baseURL}/schools/${schoolId}`, {
+        const response = await fetch(\`${serverURL}/schools/\${schoolId}\`, {
           method: "GET",
         });
         if (response.ok) {
@@ -73,3 +80,5 @@
     </script>
   </body>
 </html>
+
+`;
